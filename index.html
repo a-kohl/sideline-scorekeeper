@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scorekeeper">
+<meta name="theme-color" content="#12161A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>Sideline Scorekeeper</title>
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --ink: #12161A;        /* app background */
+    --panel: #1B2127;      /* card / bar surfaces */
+    --panel-2: #232B34;    /* nested surfaces (inputs, log) */
+    --chalk: #F4F6F2;      /* primary text */
+    --chalk-dim: #8B95A1;  /* secondary/label text */
+    --pitch: #3FA65C;      /* soccer accent */
+    --goal: #E8A33D;       /* flag football accent */
+    --flag: #D9534F;       /* correction / destructive accent */
+    --radius: 14px;
+  }
+  [data-sport="soccer"]   { --accent: var(--pitch); }
+  [data-sport="football"] { --accent: var(--goal); }
+
+  *{ box-sizing: border-box; }
+  [hidden]{ display: none !important; } /* keeps hidden elements hidden even when a class sets its own display value */
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: var(--ink);
+    color: var(--chalk);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+  button, input{ font-family: inherit; }
+  button{
+    -webkit-user-select:none; user-select:none;
+    border:none; border-radius: var(--radius);
+    cursor:pointer;
+  }
+  button:focus-visible, input:focus-visible{
+    outline: 3px solid var(--accent, var(--chalk));
+    outline-offset: 2px;
+  }
+  .app{ max-width: 720px; margin: 0 auto; min-height: 100vh; display:flex; flex-direction:column; }
+  .view[hidden]{ display:none; }
+
+  /* ---------- Setup ---------- */
+  #setup{ padding: 28px 20px 40px; display:flex; flex-direction:column; gap: 22px; }
+  .setup-header h1{ margin:0 0 4px; font-size: 26px; letter-spacing: -0.01em; }
+  .setup-header .tagline{ margin:0; color: var(--chalk-dim); font-size: 14px; }
+
+  .sport-toggle{ display:flex; background: var(--panel); border-radius: var(--radius); padding:4px; gap:4px; }
+  .sport-btn{
+    flex:1; padding: 12px 8px; background: transparent; color: var(--chalk-dim);
+    font-weight:700; font-size:14px; letter-spacing:0.02em; border-radius: 10px;
+  }
+  .sport-btn[aria-selected="true"]{ background: var(--accent); color: var(--ink); }
+
+  .setup-form{ display:flex; flex-direction:column; gap:14px; }
+  .setup-form label{ display:flex; flex-direction:column; gap:6px; font-size:13px; color: var(--chalk-dim); font-weight:600; letter-spacing:0.02em; text-transform:uppercase; }
+  .setup-form input{
+    background: var(--panel); color: var(--chalk); border:1px solid transparent;
+    border-radius: 10px; padding: 14px 12px; font-size:17px; font-weight:600;
+  }
+  .setup-form input:focus{ border-color: var(--accent); }
+
+  .primary-btn{ background: var(--accent); color: var(--ink); font-size:17px; font-weight:800; padding:18px; letter-spacing:0.01em; }
+  .secondary-btn{ background: var(--panel); color: var(--chalk); font-size:14px; font-weight:700; padding:14px; }
+  .danger-btn{ background: transparent; color: var(--flag); border:1px solid var(--flag); font-size:14px; font-weight:700; padding:14px; }
+
+  /* ---------- Live scoreboard ---------- */
+  #live{ flex:1; display:flex; flex-direction:column; }
+  .scoreboard-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding: 14px 16px; background: var(--panel);
+  }
+  .period-label{ font-weight:800; font-size:15px; letter-spacing:0.06em; color: var(--chalk-dim); min-width:64px; }
+  .period-label.final{ color: var(--flag); }
+  .clock{ font-size: clamp(30px, 8vw, 44px); font-weight:800; font-variant-numeric: tabular-nums; letter-spacing:-0.02em; flex:1; text-align:center; }
+  .clock.expired{ color: var(--flag); }
+  .clock-btn{ background: var(--accent); color: var(--ink); font-weight:800; font-size:14px; padding: 12px 18px; min-width:76px; }
+  .clock-btn[disabled]{ opacity:0.4; cursor:default; }
+
+  .field{
+    flex:1; display:flex; position:relative; min-height: 260px;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 42px, rgba(244,246,242,0.045) 42px 44px);
+  }
+  [data-sport="soccer"] .field{ background-image:none; }
+  .team-panel{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 14px; padding: 20px 14px;
+  }
+  .team-name{
+    background:transparent; color: var(--chalk-dim); text-align:center; border:none;
+    font-size:15px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    width: 100%; border-bottom: 1px solid transparent;
+  }
+  .team-name:focus{ color: var(--chalk); border-bottom-color: var(--accent); }
+  .score{ font-size: clamp(64px, 20vw, 108px); font-weight:800; font-variant-numeric: tabular-nums; line-height:1; }
+  .quick-scores{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; width:100%; }
+  .qbtn{ flex:1 1 auto; min-width:64px; padding: 14px 10px; background: var(--panel); color: var(--chalk); font-weight:800; font-size:15px; }
+  .qbtn.negative{ background: transparent; border:1px solid var(--flag); color: var(--flag); }
+  .qbtn[disabled]{ opacity:0.35; }
+
+  .divider{ width:2px; background: var(--panel-2); position:relative; flex:0 0 2px; }
+  [data-sport="soccer"] .divider::before{
+    content:""; position:absolute; top:50%; left:50%; width:88px; height:88px;
+    border:2px solid var(--pitch); border-radius:50%; transform: translate(-50%,-50%); opacity:0.35;
+  }
+  [data-sport="football"] .divider{ background: var(--goal); opacity:0.35; }
+
+  .controls-row{ display:flex; gap:10px; padding: 14px 16px; background: var(--panel); }
+  .controls-row button{ flex:1; }
+
+  .log-drawer{ background: var(--panel-2); max-height: 34vh; overflow-y:auto; padding: 4px 16px 16px; }
+  .log-drawer ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .log-drawer li{ font-size:14px; color: var(--chalk-dim); display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid rgba(244,246,242,0.06); padding-bottom:6px; }
+  .log-drawer li span.who{ color: var(--chalk); font-weight:700; }
+  .log-empty{ color: var(--chalk-dim); font-size:13px; padding: 10px 0; }
+
+  /* ---------- Modal ---------- */
+  .modal{ position:fixed; inset:0; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; padding:24px; z-index:20; }
+  .modal-box{ background: var(--panel); border-radius: var(--radius); padding: 22px; max-width: 360px; width:100%; }
+  .modal-box p{ margin:0 0 18px; font-size:15px; }
+  .modal-actions{ display:flex; gap:10px; }
+  .modal-actions button{ flex:1; }
+
+  @media (prefers-reduced-motion: no-preference){
+    .qbtn:active, .clock-btn:active, .primary-btn:active{ transform: scale(0.97); }
+  }
+</style>
+</head>
+<body data-sport="football" data-view="setup">
+<div class="app">
+
+  <!-- ===== SETUP ===== -->
+  <section id="setup" class="view">
+    <div class="setup-header">
+      <h1>Sideline Scorekeeper</h1>
+      <p class="tagline">Live score, game clock, basic events. No signal required.</p>
+    </div>
+
+    <div class="sport-toggle" role="tablist" aria-label="Sport">
+      <button class="sport-btn" data-sport-choice="football" aria-selected="true">Flag Football</button>
+      <button class="sport-btn" data-sport-choice="soccer" aria-selected="false">Soccer</button>
+    </div>
+
+    <div class="setup-form">
+      <label for="homeNameInput">Home team
+        <input id="homeNameInput" type="text" value="Home" maxlength="20">
+      </label>
+      <label for="awayNameInput">Away team
+        <input id="awayNameInput" type="text" value="Away" maxlength="20">
+      </label>
+      <label for="periodLenInput" id="periodLenLabel">Quarter length (minutes)
+        <input id="periodLenInput" type="number" min="1" max="60" value="8" inputmode="numeric">
+      </label>
+    </div>
+
+    <button id="startGameBtn" class="primary-btn">Start game</button>
+    <button id="resumeGameBtn" class="secondary-btn" hidden>Resume game in progress</button>
+  </section>
+
+  <!-- ===== LIVE ===== -->
+  <section id="live" class="view" hidden>
+    <div class="scoreboard-bar">
+      <div class="period-label" id="periodLabel">Q1</div>
+      <div class="clock" id="clockDisplay">08:00</div>
+      <button id="clockToggleBtn" class="clock-btn">Start</button>
+    </div>
+
+    <div class="field">
+      <div class="team-panel" data-team="home">
+        <input class="team-name" id="homeNameLive" value="Home" maxlength="20" aria-label="Home team name">
+        <div class="score" id="homeScore">0</div>
+        <div class="quick-scores" id="homeQuick"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="team-panel" data-team="away">
+        <input class="team-name" id="awayNameLive" value="Away" maxlength="20" aria-label="Away team name">
+        <div class="score" id="awayScore">0</div>
+        <div class="quick-scores" id="awayQuick"></div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <button id="nextPeriodBtn" class="secondary-btn">Next period</button>
+      <button id="logToggleBtn" class="secondary-btn" aria-expanded="false">Log ▾</button>
+      <button id="newGameBtn" class="danger-btn">New game</button>
+    </div>
+
+    <div id="logDrawer" class="log-drawer" hidden>
+      <ul id="logList"></ul>
+    </div>
+  </section>
+
+  <!-- ===== Confirm modal ===== -->
+  <div id="confirmModal" class="modal" hidden>
+    <div class="modal-box">
+      <p id="modalText">Start a new game? This clears the current score and clock.</p>
+      <div class="modal-actions">
+        <button id="modalCancelBtn" class="secondary-btn">Cancel</button>
+        <button id="modalConfirmBtn" class="danger-btn">New game</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "sidelineScorekeeper.state";
+
+  var SPORT_CONFIG = {
+    football: {
+      periodLabels: ["Q1","Q2","Q3","Q4"],
+      periodLenLabel: "Quarter length (minutes)",
+      defaultMinutes: 8,
+      quickButtons: [
+        { label: "+6 TD",     delta: 6 },
+        { label: "+1 PAT",    delta: 1 },
+        { label: "+2 2pt/Saf",delta: 2 },
+        { label: "-1",        delta: -1, negative: true }
+      ]
+    },
+    soccer: {
+      periodLabels: ["1st Half","2nd Half"],
+      periodLenLabel: "Half length (minutes)",
+      defaultMinutes: 25,
+      quickButtons: [
+        { label: "+1 Goal", delta: 1 },
+        { label: "-1",      delta: -1, negative: true }
+      ]
+    }
+  };
+
+  var state = null;      // live game state
+  var tickHandle = null;
+  var wakeLock = null;
+
+  // ---------- DOM refs ----------
+  var $ = function(id){ return document.getElementById(id); };
+  var body = document.body;
+
+  var setupView = $("setup"), liveView = $("live");
+  var sportBtns = document.querySelectorAll(".sport-btn");
+  var homeNameInput = $("homeNameInput"), awayNameInput = $("awayNameInput");
+  var periodLenInput = $("periodLenInput"), periodLenLabel = $("periodLenLabel");
+  var startGameBtn = $("startGameBtn"), resumeGameBtn = $("resumeGameBtn");
+
+  var periodLabelEl = $("periodLabel"), clockDisplayEl = $("clockDisplay"), clockToggleBtn = $("clockToggleBtn");
+  var homeNameLive = $("homeNameLive"), awayNameLive = $("awayNameLive");
+  var homeScoreEl = $("homeScore"), awayScoreEl = $("awayScore");
+  var homeQuickEl = $("homeQuick"), awayQuickEl = $("awayQuick");
+  var nextPeriodBtn = $("nextPeriodBtn"), logToggleBtn = $("logToggleBtn"), newGameBtn = $("newGameBtn");
+  var logDrawer = $("logDrawer"), logList = $("logList");
+
+  var confirmModal = $("confirmModal"), modalCancelBtn = $("modalCancelBtn"), modalConfirmBtn = $("modalConfirmBtn");
+
+  var setupSport = "football";
+
+  // ---------- Helpers ----------
+  function formatClock(totalSeconds){
+    var s = Math.max(0, totalSeconds|0);
+    var m = Math.floor(s/60), r = s%60;
+    return (m<10?"0":"")+m+":"+(r<10?"0":"")+r;
+  }
+
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ /* storage unavailable, fail silently */ }
+  }
+  function loadSaved(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+  function clearSaved(){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  }
+
+  function vibrate(ms){
+    if(navigator.vibrate){ try{ navigator.vibrate(ms); }catch(e){} }
+  }
+
+  function requestWakeLock(){
+    if("wakeLock" in navigator){
+      navigator.wakeLock.request("screen").then(function(lock){ wakeLock = lock; }).catch(function(){});
+    }
+  }
+  function releaseWakeLock(){
+    if(wakeLock){ wakeLock.release().catch(function(){}); wakeLock = null; }
+  }
+
+  // ---------- Setup view ----------
+  sportBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      setupSport = btn.getAttribute("data-sport-choice");
+      sportBtns.forEach(function(b){ b.setAttribute("aria-selected", b===btn ? "true":"false"); });
+      body.setAttribute("data-sport", setupSport);
+      var cfg = SPORT_CONFIG[setupSport];
+      periodLenLabel.childNodes[0].textContent = cfg.periodLenLabel;
+      periodLenInput.value = cfg.defaultMinutes;
+    });
+  });
+
+  startGameBtn.addEventListener("click", function(){
+    var cfg = SPORT_CONFIG[setupSport];
+    var minutes = parseFloat(periodLenInput.value) || cfg.defaultMinutes;
+    var periodLenSec = Math.round(minutes*60);
+
+    state = {
+      sport: setupSport,
+      home: { name: (homeNameInput.value.trim() || "Home"), score: 0 },
+      away: { name: (awayNameInput.value.trim() || "Away"), score: 0 },
+      periodLabels: cfg.periodLabels,
+      periodIndex: 0,
+      periodLenSec: periodLenSec,
+      clockRemaining: periodLenSec,
+      clockRunning: false,
+      gameOver: false,
+      events: []
+    };
+    save();
+    switchToLive();
+  });
+
+  resumeGameBtn.addEventListener("click", function(){
+    var saved = loadSaved();
+    if(saved){
+      state = saved;
+      state.clockRunning = false; // always resume paused, coach confirms clock manually
+      save();
+      switchToLive();
+    }
+  });
+
+  // ---------- View switching ----------
+  function switchToLive(){
+    body.setAttribute("data-sport", state.sport);
+    body.setAttribute("data-view", "live");
+    setupView.hidden = true;
+    liveView.hidden = false;
+    buildQuickButtons();
+    homeNameLive.value = state.home.name;
+    awayNameLive.value = state.away.name;
+    renderLive();
+  }
+
+  function switchToSetup(){
+    body.setAttribute("data-view", "setup");
+    liveView.hidden = true;
+    setupView.hidden = false;
+    resumeGameBtn.hidden = true;
+    stopClock();
+  }
+
+  // ---------- Quick score buttons ----------
+  function buildQuickButtons(){
+    var cfg = SPORT_CONFIG[state.sport];
+    homeQuickEl.innerHTML = "";
+    awayQuickEl.innerHTML = "";
+    cfg.quickButtons.forEach(function(q){
+      homeQuickEl.appendChild(makeQuickButton(q, "home"));
+      awayQuickEl.appendChild(makeQuickButton(q, "away"));
+    });
+  }
+  function makeQuickButton(q, team){
+    var b = document.createElement("button");
+    b.className = "qbtn" + (q.negative ? " negative" : "");
+    b.textContent = q.label;
+    b.addEventListener("click", function(){ addScore(team, q.delta); });
+    return b;
+  }
+
+  // ---------- Scoring ----------
+  function addScore(team, delta){
+    if(state.gameOver) return;
+    var t = state[team];
+    t.score = Math.max(0, t.score + delta);
+    state.events.unshift({
+      period: state.periodLabels[state.periodIndex],
+      clock: formatClock(state.clockRemaining),
+      who: t.name,
+      delta: delta
+    });
+    vibrate(delta > 0 ? 15 : 25);
+    save();
+    renderLive();
+  }
+
+  // ---------- Clock ----------
+  function startClock(){
+    if(state.gameOver || state.clockRemaining<=0) return;
+    state.clockRunning = true;
+    requestWakeLock();
+    tickHandle = setInterval(tick, 1000);
+    save();
+    renderLive();
+  }
+  function pauseClock(){
+    stopClock();
+    save();
+    renderLive();
+  }
+  function stopClock(){
+    state && (state.clockRunning = false);
+    if(tickHandle){ clearInterval(tickHandle); tickHandle = null; }
+    releaseWakeLock();
+  }
+  function tick(){
+    state.clockRemaining--;
+    if(state.clockRemaining<=0){
+      state.clockRemaining = 0;
+      stopClock();
+      save();
+    }
+    renderLive();
+  }
+  clockToggleBtn.addEventListener("click", function(){
+    if(state.clockRunning){ pauseClock(); } else { startClock(); }
+  });
+
+  // ---------- Periods ----------
+  nextPeriodBtn.addEventListener("click", function(){
+    var isLast = state.periodIndex >= state.periodLabels.length - 1;
+    stopClock();
+    if(isLast){
+      state.gameOver = true;
+      state.events.unshift({ period: "FINAL", clock: "", who: state.home.name+" "+state.home.score+" – "+state.away.name+" "+state.away.score, delta: null, isSummary:true });
+    } else {
+      state.events.unshift({ period: null, clock: "", who: "End of "+state.periodLabels[state.periodIndex], delta: null, isSummary:true });
+      state.periodIndex++;
+      state.clockRemaining = state.periodLenSec;
+    }
+    save();
+    renderLive();
+  });
+
+  // ---------- Team name edits ----------
+  homeNameLive.addEventListener("input", function(){ state.home.name = homeNameLive.value.trim() || "Home"; save(); });
+  awayNameLive.addEventListener("input", function(){ state.away.name = awayNameLive.value.trim() || "Away"; save(); });
+
+  // ---------- Log drawer ----------
+  logToggleBtn.addEventListener("click", function(){
+    var willOpen = logDrawer.hidden; // if currently hidden, this click opens it
+    logDrawer.hidden = !willOpen;
+    logToggleBtn.setAttribute("aria-expanded", String(willOpen));
+    logToggleBtn.textContent = willOpen ? "Log ▲" : "Log ▾";
+  });
+
+  // ---------- New game / modal ----------
+  newGameBtn.addEventListener("click", function(){ confirmModal.hidden = false; });
+  modalCancelBtn.addEventListener("click", function(){ confirmModal.hidden = true; });
+  modalConfirmBtn.addEventListener("click", function(){
+    confirmModal.hidden = true;
+    clearSaved();
+    stopClock();
+    state = null;
+    switchToSetup();
+  });
+
+  // ---------- Render ----------
+  function renderLive(){
+    periodLabelEl.textContent = state.gameOver ? "FINAL" : state.periodLabels[state.periodIndex];
+    periodLabelEl.classList.toggle("final", !!state.gameOver);
+
+    clockDisplayEl.textContent = formatClock(state.clockRemaining);
+    clockDisplayEl.classList.toggle("expired", state.clockRemaining<=0 && !state.gameOver);
+
+    clockToggleBtn.textContent = state.clockRunning ? "Pause" : "Start";
+    clockToggleBtn.disabled = state.gameOver;
+
+    homeScoreEl.textContent = state.home.score;
+    awayScoreEl.textContent = state.away.score;
+
+    var quickBtns = document.querySelectorAll(".qbtn");
+    quickBtns.forEach(function(b){ b.disabled = !!state.gameOver; });
+
+    nextPeriodBtn.textContent = (state.periodIndex >= state.periodLabels.length-1) ? "End game" : "Next period";
+    nextPeriodBtn.hidden = !!state.gameOver;
+
+    // event log
+    logList.innerHTML = "";
+    if(state.events.length===0){
+      var li = document.createElement("li");
+      li.className = "log-empty";
+      li.textContent = "No events yet.";
+      logList.appendChild(li);
+    } else {
+      state.events.forEach(function(ev){
+        var li = document.createElement("li");
+        if(ev.isSummary){
+          li.innerHTML = "<span>"+ (ev.period ? ev.period+" — " : "") + escapeHtml(ev.who) +"</span><span></span>";
+        } else {
+          var sign = ev.delta>0 ? "+" : "";
+          li.innerHTML = "<span>"+escapeHtml(ev.period)+" "+escapeHtml(ev.clock)+"</span>"+
+                          "<span class='who'>"+escapeHtml(ev.who)+" "+sign+ev.delta+"</span>";
+        }
+        logList.appendChild(li);
+      });
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  // ---------- Init ----------
+  function init(){
+    var saved = loadSaved();
+    if(saved && saved.home && !saved.gameOver){
+      resumeGameBtn.hidden = false;
+    }
+    // reflect default sport styling on setup screen
+    body.setAttribute("data-sport", setupSport);
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible" && state && state.clockRunning){
+      requestWakeLock();
+    }
+  });
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
