@@ -20,9 +20,7 @@
     --chalk: #F4F5F0;
     --slate: #7C8598;
   }
-
   * { box-sizing: border-box; }
-
   body {
     margin: 0;
     min-height: 100vh;
@@ -33,7 +31,6 @@
     justify-content: center;
     padding: 28px 12px 56px;
   }
-
   .phone {
     width: 100%;
     max-width: 400px;
@@ -44,7 +41,6 @@
     border: 1px solid rgba(255,255,255,0.08);
     height: fit-content;
   }
-
   .topbar {
     display: flex;
     align-items: center;
@@ -53,7 +49,6 @@
     background: var(--navy-light);
     border-bottom: 2px solid var(--red);
   }
-
   .wordmark {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
@@ -61,7 +56,6 @@
     font-size: 16px;
     text-transform: uppercase;
   }
-
   .live-badge {
     display: flex;
     align-items: center;
@@ -71,18 +65,13 @@
     letter-spacing: 0.5px;
     color: var(--slate);
   }
-
   .live-badge.is-live { color: var(--red); }
-
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--slate); }
   .live-badge.is-live .dot { background: var(--red); }
-
   @media (prefers-reduced-motion: no-preference) {
     .live-badge.is-live .dot { animation: pulse 1.4s ease-in-out infinite; }
   }
-
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
   .scoreboard {
     display: flex;
     align-items: flex-start;
@@ -90,9 +79,7 @@
     gap: 14px;
     padding: 24px 16px 6px;
   }
-
   .score-block { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-
   .team-name {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -105,12 +92,10 @@
     border-radius: 4px;
     border: 1px dashed transparent;
   }
-
   .team-name:focus {
     outline: none;
     border-color: rgba(244,245,240,0.35);
   }
-
   .score-value {
     position: relative;
     font-family: 'Oswald', sans-serif;
@@ -122,7 +107,6 @@
     min-width: 1em;
     text-align: center;
   }
-
   .score-value::before {
     content: '8';
     position: absolute;
@@ -130,11 +114,8 @@
     color: rgba(211,16,39,0.08);
     z-index: -1;
   }
-
   .score-dash { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--slate); font-weight: 600; margin-top: 34px; }
-
   .score-btns { display: flex; gap: 6px; width: 100%; }
-
   .btn-goal {
     flex: 1;
     padding: 12px 0;
@@ -148,11 +129,11 @@
     cursor: pointer;
     transition: transform 0.1s, background 0.15s;
   }
-
   .btn-goal:active { transform: scale(0.96); }
   .btn-goal:hover { background: #b60d21; }
   .btn-goal:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
+  .btn-goal:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-goal:disabled:hover { background: var(--red); }
   .btn-correct {
     padding: 12px 10px;
     background: rgba(255,255,255,0.06);
@@ -164,20 +145,26 @@
     font-size: 13px;
     cursor: pointer;
   }
-
   .btn-correct:hover { background: rgba(255,255,255,0.12); }
   .btn-correct:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
+  .btn-correct:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-correct:disabled:hover { background: rgba(255,255,255,0.06); }
   .clock-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     padding: 18px 20px 22px;
     border-top: 1px solid rgba(255,255,255,0.08);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-
+  .period-label {
+    font-size: 11px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
   .clock-big {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -187,28 +174,52 @@
     padding: 6px 22px;
     border-radius: 8px;
   }
-
-  .clock-buttons { display: flex; gap: 8px; }
-
-  .clock-buttons button {
-    padding: 11px 22px;
-    border-radius: 8px;
+  .btn-start-stop {
+    width: 100%;
+    max-width: 220px;
+    padding: 14px 0;
+    border-radius: 10px;
     border: 1px solid rgba(255,255,255,0.15);
     background: var(--navy-light);
     color: var(--chalk);
     font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 16px;
     cursor: pointer;
   }
-
-  .clock-buttons button:hover { background: #1c3760; }
-  .clock-buttons button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-  #start-stop.running { background: var(--red); border-color: var(--red); }
-
-  .event-buttons { padding: 16px 20px 8px; }
-
-  .event-buttons h3, .panel h3 {
+  .btn-start-stop:hover { background: #1c3760; }
+  .btn-start-stop.running { background: var(--red); border-color: var(--red); }
+  .btn-start-stop:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .btn-start-stop:disabled { opacity: 0.35; cursor: not-allowed; }
+  .clock-secondary-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .clock-secondary-buttons button {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: var(--slate);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .clock-secondary-buttons button:hover { background: rgba(255,255,255,0.1); color: var(--chalk); }
+  .clock-secondary-buttons button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  #end-game-btn { color: var(--blue); border-color: rgba(44,93,166,0.4); }
+  #end-game-btn:hover { background: rgba(44,93,166,0.16); color: #fff; }
+  #new-game-btn { color: var(--red); border-color: rgba(211,16,39,0.3); }
+  #new-game-btn:hover { background: rgba(211,16,39,0.14); color: #fff; }
+  .panel {
+    background: var(--chalk);
+    color: var(--navy);
+    padding: 16px 20px 24px;
+  }
+  .panel h3 {
     font-family: 'Oswald', sans-serif;
     font-size: 12px;
     letter-spacing: 1.5px;
@@ -216,51 +227,7 @@
     margin: 0 0 10px;
     text-transform: uppercase;
   }
-
-  .event-team-select { display: flex; gap: 6px; margin-bottom: 10px; }
-
-  .team-toggle {
-    flex: 1;
-    padding: 8px 0;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: transparent;
-    color: var(--slate);
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .team-toggle.active { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .team-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
-  .event-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-
-  .event-grid button {
-    padding: 12px 4px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04);
-    color: var(--chalk);
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  .event-grid button:hover { background: rgba(255,255,255,0.1); }
-  .event-grid button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
-  .panel {
-    background: var(--chalk);
-    color: var(--navy);
-    padding: 16px 20px 24px;
-    margin-top: 6px;
-  }
-
-  .panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; }
-
+  .panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; }
   .panel li {
     display: flex;
     gap: 10px;
@@ -269,11 +236,55 @@
     border-bottom: 1px solid rgba(11,31,58,0.08);
     padding-bottom: 8px;
   }
-
   .panel .empty-state { font-size: 13px; color: var(--slate); }
-
   .event-time { font-family: 'Oswald', sans-serif; font-weight: 600; color: var(--blue); min-width: 46px; }
-
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(6,15,31,0.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal-card {
+    width: 100%;
+    max-width: 340px;
+    background: var(--navy-light);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .modal-card h3 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 4px;
+    color: var(--chalk);
+  }
+  .modal-card p {
+    font-size: 12px;
+    color: var(--slate);
+    margin: 4px 0 16px;
+  }
+  .modal-card input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.25);
+    color: var(--chalk);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    margin: 0 0 18px;
+  }
+  .modal-card input::placeholder { color: var(--slate); }
+  .modal-card input:focus { outline: none; border-color: var(--blue); }
+  .modal-buttons { display: flex; gap: 8px; }
+  .modal-buttons .btn-goal, .modal-buttons .btn-correct { flex: 1; }
   @media (max-width: 360px) {
     .score-value { font-size: 46px; }
     .clock-big { font-size: 26px; }
@@ -281,13 +292,11 @@
 </style>
 </head>
 <body>
-
   <div class="phone">
     <div class="topbar">
       <span class="wordmark">LFA Live</span>
       <span class="live-badge" id="live-badge"><span class="dot"></span><span id="live-text">Ready</span></span>
     </div>
-
     <div class="scoreboard">
       <div class="score-block">
         <span class="team-name" contenteditable="true" spellcheck="false" id="home-name">Home</span>
@@ -307,70 +316,78 @@
         </div>
       </div>
     </div>
-
     <div class="clock-section">
+      <span class="period-label" id="period-label">Pre-Game</span>
       <span class="clock-big" id="clock">00:00</span>
-      <div class="clock-buttons">
-        <button id="start-stop">Start</button>
-        <button id="reset-btn">Reset</button>
+      <button id="start-stop" class="btn-start-stop">Start</button>
+      <div class="clock-secondary-buttons">
+        <button id="half-btn">2nd Half</button>
+        <button id="end-game-btn">End Game</button>
+        <button id="new-game-btn">New Game</button>
       </div>
     </div>
-
-    <div class="event-buttons">
-      <h3>+ Add Event</h3>
-      <div class="event-team-select">
-        <button class="team-toggle active" data-team="home" id="toggle-home">Home</button>
-        <button class="team-toggle" data-team="away" id="toggle-away">Away</button>
-      </div>
-      <div class="event-grid">
-        <button data-event="Yellow">Yellow</button>
-        <button data-event="Red">Red</button>
-        <button data-event="Sub">Sub</button>
-        <button data-event="Foul">Foul</button>
-        <button data-event="Corner">Corner</button>
-        <button data-event="Offside">Offside</button>
-      </div>
-    </div>
-
     <div class="panel">
-      <h3>Events</h3>
+      <h3>Goals</h3>
       <ul id="events-list"></ul>
     </div>
   </div>
-
+  <div class="modal-backdrop" id="goal-modal-backdrop">
+    <div class="modal-card">
+      <h3 id="goal-modal-team">Who scored?</h3>
+      <p>Optional, leave blank if you don't know.</p>
+      <input type="text" id="goal-modal-input" placeholder="Player name" autocomplete="off">
+      <div class="modal-buttons">
+        <button class="btn-correct" id="goal-modal-skip">Skip</button>
+        <button class="btn-goal" id="goal-modal-save">Log Goal</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="confirm-modal-backdrop">
+    <div class="modal-card">
+      <h3 id="confirm-modal-title">Are you sure?</h3>
+      <p id="confirm-modal-body"></p>
+      <div class="modal-buttons">
+        <button class="btn-correct" id="confirm-modal-cancel">Cancel</button>
+        <button class="btn-goal" id="confirm-modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
 <script>
   const state = {
+    phase: 'pre',
     homeScore: 0,
     awayScore: 0,
     clockSeconds: 0,
     running: false,
-    eventTeam: 'home',
     events: []
   };
-
   let timer = null;
-
+  let pendingGoalTeam = null;
+  let confirmCallback = null;
   function formatClock(totalSeconds) {
     const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
     const s = (totalSeconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   }
-
   function currentMatchMinute() {
     return Math.floor(state.clockSeconds / 60) + "'";
   }
-
   function teamName(team) {
     const el = document.getElementById(team + '-name');
     return el.textContent.trim() || (team === 'home' ? 'Home' : 'Away');
   }
-
+  function periodLabel() {
+    if (state.phase === 'pre') return 'Pre-Game';
+    if (state.phase === 'first') return '1st Half';
+    if (state.phase === 'second') return '2nd Half';
+    return 'Final';
+  }
   function renderEvents() {
     const list = document.getElementById('events-list');
     list.innerHTML = '';
     if (state.events.length === 0) {
       const li = document.createElement('li');
-      li.innerHTML = '<span class="empty-state">No events logged yet.</span>';
+      li.innerHTML = '<span class="empty-state">No goals logged yet.</span>';
       list.appendChild(li);
       return;
     }
@@ -380,43 +397,58 @@
       timeSpan.className = 'event-time';
       timeSpan.textContent = ev.time;
       const textSpan = document.createElement('span');
-      textSpan.textContent = ev.text;
+      textSpan.textContent = `Goal, ${teamName(ev.team)}` + (ev.scorer ? `: ${ev.scorer}` : '');
       li.appendChild(timeSpan);
       li.appendChild(textSpan);
       list.appendChild(li);
     });
   }
-
   function render() {
     document.getElementById('home-score').textContent = state.homeScore;
     document.getElementById('away-score').textContent = state.awayScore;
     document.getElementById('clock').textContent = formatClock(state.clockSeconds);
-
+    document.getElementById('period-label').textContent = periodLabel();
     const startStopBtn = document.getElementById('start-stop');
     startStopBtn.textContent = state.running ? 'Stop' : 'Start';
     startStopBtn.classList.toggle('running', state.running);
-
+    startStopBtn.disabled = (state.phase === 'final');
     const liveBadge = document.getElementById('live-badge');
-    liveBadge.classList.toggle('is-live', state.running);
-    document.getElementById('live-text').textContent = state.running ? 'Live' : 'Ready';
-
-    document.getElementById('toggle-home').classList.toggle('active', state.eventTeam === 'home');
-    document.getElementById('toggle-away').classList.toggle('active', state.eventTeam === 'away');
-
+    liveBadge.classList.remove('is-live');
+    let liveText = 'Ready';
+    if (state.phase === 'final') {
+      liveText = 'Final';
+    } else if (state.running) {
+      liveText = 'Live';
+      liveBadge.classList.add('is-live');
+    }
+    document.getElementById('live-text').textContent = liveText;
+    document.getElementById('half-btn').style.display = (state.phase === 'first') ? '' : 'none';
+    document.getElementById('end-game-btn').style.display = (state.phase === 'first' || state.phase === 'second') ? '' : 'none';
+    const goalsLocked = (state.phase === 'pre' || state.phase === 'final');
+    document.querySelectorAll('.btn-goal[data-team]').forEach(btn => { btn.disabled = goalsLocked; });
+    const homeHasGoal = state.events.some(e => e.team === 'home');
+    const awayHasGoal = state.events.some(e => e.team === 'away');
+    document.querySelector('.btn-correct[data-team="home"]').disabled = goalsLocked || !homeHasGoal;
+    document.querySelector('.btn-correct[data-team="away"]').disabled = goalsLocked || !awayHasGoal;
     renderEvents();
   }
-
-  function addEvent(text) {
-    state.events.push({ time: currentMatchMinute(), text });
+  function undoLastGoal(team) {
+    let idx = -1;
+    for (let i = state.events.length - 1; i >= 0; i--) {
+      if (state.events[i].team === team) { idx = i; break; }
+    }
+    if (idx === -1) return;
+    state.events.splice(idx, 1);
+    if (team === 'home') { state.homeScore = Math.max(0, state.homeScore - 1); }
+    else { state.awayScore = Math.max(0, state.awayScore - 1); }
     render();
   }
-
   function tick() {
     state.clockSeconds++;
     render();
   }
-
   document.getElementById('start-stop').addEventListener('click', () => {
+    if (state.phase === 'pre') { state.phase = 'first'; }
     state.running = !state.running;
     if (state.running) {
       timer = setInterval(tick, 1000);
@@ -425,61 +457,117 @@
     }
     render();
   });
-
-  document.getElementById('reset-btn').addEventListener('click', () => {
-    if (!window.confirm('Reset score, clock, and events for a new game?')) return;
-    state.homeScore = 0;
-    state.awayScore = 0;
-    state.clockSeconds = 0;
-    state.events = [];
-    state.running = false;
-    clearInterval(timer);
-    render();
-  });
-
-  document.querySelectorAll('.btn-goal').forEach(btn => {
+  document.querySelectorAll('.btn-correct[data-team]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const team = btn.dataset.team;
-      if (team === 'home') { state.homeScore++; }
-      else { state.awayScore++; }
-      addEvent(`Goal, ${teamName(team)}`);
+      undoLastGoal(btn.dataset.team);
     });
   });
-
-  document.querySelectorAll('.btn-correct').forEach(btn => {
+  function showConfirm(title, body, onConfirm) {
+    document.getElementById('confirm-modal-title').textContent = title;
+    document.getElementById('confirm-modal-body').textContent = body;
+    confirmCallback = onConfirm;
+    document.getElementById('confirm-modal-backdrop').classList.add('open');
+  }
+  function hideConfirm() {
+    document.getElementById('confirm-modal-backdrop').classList.remove('open');
+    confirmCallback = null;
+  }
+  document.getElementById('confirm-modal-cancel').addEventListener('click', hideConfirm);
+  document.getElementById('confirm-modal-confirm').addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    hideConfirm();
+  });
+  document.getElementById('confirm-modal-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'confirm-modal-backdrop') hideConfirm();
+  });
+  document.getElementById('half-btn').addEventListener('click', () => {
+    showConfirm(
+      'Start 2nd half?',
+      'This resets the clock to 00:00. Score and goals stay the same. You can only do this once per game.',
+      () => {
+        clearInterval(timer);
+        state.running = false;
+        state.clockSeconds = 0;
+        state.phase = 'second';
+        render();
+      }
+    );
+  });
+  document.getElementById('end-game-btn').addEventListener('click', () => {
+    showConfirm(
+      'End the game?',
+      'This locks the score and clock. You will not be able to add more goals.',
+      () => {
+        clearInterval(timer);
+        state.running = false;
+        state.phase = 'final';
+        render();
+      }
+    );
+  });
+  document.getElementById('new-game-btn').addEventListener('click', () => {
+    showConfirm(
+      'Start a new game?',
+      'This clears the score, clock, and goal log.',
+      () => {
+        state.phase = 'pre';
+        state.homeScore = 0;
+        state.awayScore = 0;
+        state.clockSeconds = 0;
+        state.events = [];
+        state.running = false;
+        clearInterval(timer);
+        render();
+      }
+    );
+  });
+  function openGoalModal(team) {
+    pendingGoalTeam = team;
+    document.getElementById('goal-modal-team').textContent = `Who scored for ${teamName(team)}?`;
+    const input = document.getElementById('goal-modal-input');
+    input.value = '';
+    document.getElementById('goal-modal-backdrop').classList.add('open');
+    input.focus();
+  }
+  function closeGoalModal() {
+    document.getElementById('goal-modal-backdrop').classList.remove('open');
+    pendingGoalTeam = null;
+  }
+  function logGoal(scorerName) {
+    state.events.push({
+      time: currentMatchMinute(),
+      team: pendingGoalTeam,
+      scorer: (scorerName || '').trim()
+    });
+    render();
+  }
+  document.querySelectorAll('.btn-goal[data-team]').forEach(btn => {
     btn.addEventListener('click', () => {
       const team = btn.dataset.team;
-      if (team === 'home') { state.homeScore = Math.max(0, state.homeScore - 1); }
-      else { state.awayScore = Math.max(0, state.awayScore - 1); }
+      if (team === 'home') { state.homeScore++; } else { state.awayScore++; }
       render();
+      openGoalModal(team);
     });
   });
-
-  document.getElementById('toggle-home').addEventListener('click', () => {
-    state.eventTeam = 'home';
-    render();
+  document.getElementById('goal-modal-skip').addEventListener('click', () => {
+    logGoal('');
+    closeGoalModal();
   });
-
-  document.getElementById('toggle-away').addEventListener('click', () => {
-    state.eventTeam = 'away';
-    render();
+  document.getElementById('goal-modal-save').addEventListener('click', () => {
+    logGoal(document.getElementById('goal-modal-input').value);
+    closeGoalModal();
   });
-
-  document.querySelectorAll('.event-grid button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const label = btn.dataset.event;
-      const map = {
-        Yellow: 'Yellow card',
-        Red: 'Red card',
-        Sub: 'Substitution',
-        Foul: 'Foul',
-        Corner: 'Corner kick',
-        Offside: 'Offside'
-      };
-      addEvent(`${map[label] || label}, ${teamName(state.eventTeam)}`);
-    });
+  document.getElementById('goal-modal-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      document.getElementById('goal-modal-save').click();
+    }
   });
-
+  document.getElementById('goal-modal-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'goal-modal-backdrop') {
+      logGoal('');
+      closeGoalModal();
+    }
+  });
   render();
 </script>
 </body>
