@@ -20,7 +20,9 @@
     --chalk: #F4F5F0;
     --slate: #7C8598;
   }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -31,6 +33,7 @@
     justify-content: center;
     padding: 28px 12px 56px;
   }
+
   .phone {
     width: 100%;
     max-width: 400px;
@@ -41,6 +44,7 @@
     border: 1px solid rgba(255,255,255,0.08);
     height: fit-content;
   }
+
   .topbar {
     display: flex;
     align-items: center;
@@ -49,6 +53,7 @@
     background: var(--navy-light);
     border-bottom: 2px solid var(--red);
   }
+
   .wordmark {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
@@ -56,6 +61,7 @@
     font-size: 16px;
     text-transform: uppercase;
   }
+
   .live-badge {
     display: flex;
     align-items: center;
@@ -65,13 +71,69 @@
     letter-spacing: 0.5px;
     color: var(--slate);
   }
+
   .live-badge.is-live { color: var(--red); }
+
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--slate); }
   .live-badge.is-live .dot { background: var(--red); }
+
   @media (prefers-reduced-motion: no-preference) {
     .live-badge.is-live .dot { animation: pulse 1.4s ease-in-out infinite; }
   }
+
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 18px;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .kid-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--chalk);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px dashed transparent;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .kid-name:empty::before { content: attr(data-placeholder); color: var(--slate); font-weight: 500; }
+  .kid-name:focus { outline: none; border-color: rgba(244,245,240,0.35); }
+
+  #history-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: var(--chalk);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  #history-btn:hover { background: rgba(255,255,255,0.12); }
+  #history-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  .storage-warning {
+    display: none;
+    background: rgba(211,16,39,0.15);
+    color: var(--chalk);
+    font-size: 11px;
+    padding: 8px 18px;
+    text-align: center;
+  }
+
+  .storage-warning.show { display: block; }
+
   .scoreboard {
     display: flex;
     align-items: flex-start;
@@ -79,7 +141,9 @@
     gap: 14px;
     padding: 24px 16px 6px;
   }
+
   .score-block { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
   .team-name {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -92,10 +156,9 @@
     border-radius: 4px;
     border: 1px dashed transparent;
   }
-  .team-name:focus {
-    outline: none;
-    border-color: rgba(244,245,240,0.35);
-  }
+
+  .team-name:focus { outline: none; border-color: rgba(244,245,240,0.35); }
+
   .score-value {
     position: relative;
     font-family: 'Oswald', sans-serif;
@@ -107,6 +170,7 @@
     min-width: 1em;
     text-align: center;
   }
+
   .score-value::before {
     content: '8';
     position: absolute;
@@ -114,8 +178,11 @@
     color: rgba(211,16,39,0.08);
     z-index: -1;
   }
+
   .score-dash { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--slate); font-weight: 600; margin-top: 34px; }
+
   .score-btns { display: flex; gap: 6px; width: 100%; }
+
   .btn-goal {
     flex: 1;
     padding: 12px 0;
@@ -129,11 +196,13 @@
     cursor: pointer;
     transition: transform 0.1s, background 0.15s;
   }
+
   .btn-goal:active { transform: scale(0.96); }
   .btn-goal:hover { background: #b60d21; }
   .btn-goal:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
   .btn-goal:disabled { opacity: 0.35; cursor: not-allowed; }
   .btn-goal:disabled:hover { background: var(--red); }
+
   .btn-correct {
     padding: 12px 10px;
     background: rgba(255,255,255,0.06);
@@ -145,10 +214,12 @@
     font-size: 13px;
     cursor: pointer;
   }
+
   .btn-correct:hover { background: rgba(255,255,255,0.12); }
   .btn-correct:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
   .btn-correct:disabled { opacity: 0.35; cursor: not-allowed; }
   .btn-correct:disabled:hover { background: rgba(255,255,255,0.06); }
+
   .clock-section {
     display: flex;
     flex-direction: column;
@@ -158,6 +229,7 @@
     border-top: 1px solid rgba(255,255,255,0.08);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
+
   .period-label {
     font-size: 11px;
     color: var(--slate);
@@ -165,6 +237,7 @@
     letter-spacing: 1.5px;
     font-weight: 600;
   }
+
   .clock-big {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -174,6 +247,7 @@
     padding: 6px 22px;
     border-radius: 8px;
   }
+
   .btn-start-stop {
     width: 100%;
     max-width: 220px;
@@ -187,16 +261,14 @@
     font-size: 16px;
     cursor: pointer;
   }
+
   .btn-start-stop:hover { background: #1c3760; }
   .btn-start-stop.running { background: var(--red); border-color: var(--red); }
   .btn-start-stop:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
   .btn-start-stop:disabled { opacity: 0.35; cursor: not-allowed; }
-  .clock-secondary-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
+
+  .clock-secondary-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
   .clock-secondary-buttons button {
     padding: 9px 14px;
     border-radius: 8px;
@@ -208,17 +280,18 @@
     font-size: 12px;
     cursor: pointer;
   }
+
   .clock-secondary-buttons button:hover { background: rgba(255,255,255,0.1); color: var(--chalk); }
   .clock-secondary-buttons button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
   #end-game-btn { color: var(--blue); border-color: rgba(44,93,166,0.4); }
   #end-game-btn:hover { background: rgba(44,93,166,0.16); color: #fff; }
+
   #new-game-btn { color: var(--red); border-color: rgba(211,16,39,0.3); }
   #new-game-btn:hover { background: rgba(211,16,39,0.14); color: #fff; }
-  .panel {
-    background: var(--chalk);
-    color: var(--navy);
-    padding: 16px 20px 24px;
-  }
+
+  .panel { background: var(--chalk); color: var(--navy); padding: 16px 20px 24px; }
+
   .panel h3 {
     font-family: 'Oswald', sans-serif;
     font-size: 12px;
@@ -227,7 +300,9 @@
     margin: 0 0 10px;
     text-transform: uppercase;
   }
+
   .panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; }
+
   .panel li {
     display: flex;
     gap: 10px;
@@ -236,8 +311,11 @@
     border-bottom: 1px solid rgba(11,31,58,0.08);
     padding-bottom: 8px;
   }
+
   .panel .empty-state { font-size: 13px; color: var(--slate); }
+
   .event-time { font-family: 'Oswald', sans-serif; font-weight: 600; color: var(--blue); min-width: 46px; }
+
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -248,7 +326,10 @@
     padding: 20px;
     z-index: 50;
   }
+
   .modal-backdrop.open { display: flex; }
+  #confirm-modal-backdrop { z-index: 60; }
+
   .modal-card {
     width: 100%;
     max-width: 340px;
@@ -258,6 +339,7 @@
     padding: 20px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   }
+
   .modal-card h3 {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -265,11 +347,9 @@
     margin: 0 0 4px;
     color: var(--chalk);
   }
-  .modal-card p {
-    font-size: 12px;
-    color: var(--slate);
-    margin: 4px 0 16px;
-  }
+
+  .modal-card p { font-size: 12px; color: var(--slate); margin: 4px 0 16px; }
+
   .modal-card input {
     width: 100%;
     padding: 12px 14px;
@@ -281,10 +361,76 @@
     font-size: 15px;
     margin: 0 0 18px;
   }
+
   .modal-card input::placeholder { color: var(--slate); }
   .modal-card input:focus { outline: none; border-color: var(--blue); }
+
   .modal-buttons { display: flex; gap: 8px; }
   .modal-buttons .btn-goal, .modal-buttons .btn-correct { flex: 1; }
+
+  .history-card { max-width: 380px; max-height: 82vh; display: flex; flex-direction: column; }
+
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .history-header h3 { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 17px; margin: 0; color: var(--chalk); }
+
+  #history-close {
+    background: none; border: none; color: var(--slate); font-size: 22px;
+    line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  #history-close:hover { color: var(--chalk); }
+  #history-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  #history-filter {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.25);
+    color: var(--chalk);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  #history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+  .history-empty { font-size: 13px; color: var(--slate); text-align: center; padding: 20px 0; }
+
+  .history-entry {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+
+  .history-entry-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
+  .history-date { font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+  .history-delete {
+    background: none; border: none; color: var(--slate); font-size: 18px;
+    line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .history-delete:hover { color: var(--red); }
+  .history-delete:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  .history-teams { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 16px; color: var(--chalk); margin-bottom: 6px; }
+
+  .history-kid-row { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--slate); margin-bottom: 4px; flex-wrap: wrap; }
+
+  .history-kid {
+    font-weight: 600; color: var(--blue); border-radius: 4px; padding: 1px 4px; border: 1px dashed transparent;
+  }
+  .history-kid:empty::before { content: attr(data-placeholder); color: var(--slate); font-weight: 500; }
+  .history-kid:focus { outline: none; border-color: rgba(124,133,152,0.4); }
+
+  .history-kid-goals { font-size: 12px; color: var(--slate); margin-bottom: 6px; }
+
+  .history-entry summary { font-size: 12px; color: var(--blue); cursor: pointer; font-weight: 600; margin-top: 4px; }
+
+  .history-goal-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .history-goal-list li { font-size: 13px; display: flex; gap: 8px; border: none; padding: 0; }
+
   @media (max-width: 360px) {
     .score-value { font-size: 46px; }
     .clock-big { font-size: 26px; }
@@ -292,11 +438,20 @@
 </style>
 </head>
 <body>
+
   <div class="phone">
     <div class="topbar">
       <span class="wordmark">LFA Live</span>
       <span class="live-badge" id="live-badge"><span class="dot"></span><span id="live-text">Ready</span></span>
     </div>
+
+    <div class="meta-bar">
+      <span class="kid-name" contenteditable="true" spellcheck="false" id="kid-name" data-placeholder="Tracking for (tap to add child)"></span>
+      <button id="history-btn">History</button>
+    </div>
+
+    <div class="storage-warning" id="storage-warning">History isn't saving on this device (private browsing?). The game still works, it just won't be remembered after you close it.</div>
+
     <div class="scoreboard">
       <div class="score-block">
         <span class="team-name" contenteditable="true" spellcheck="false" id="home-name">Home</span>
@@ -316,6 +471,7 @@
         </div>
       </div>
     </div>
+
     <div class="clock-section">
       <span class="period-label" id="period-label">Pre-Game</span>
       <span class="clock-big" id="clock">00:00</span>
@@ -326,11 +482,13 @@
         <button id="new-game-btn">New Game</button>
       </div>
     </div>
+
     <div class="panel">
       <h3>Goals</h3>
       <ul id="events-list"></ul>
     </div>
   </div>
+
   <div class="modal-backdrop" id="goal-modal-backdrop">
     <div class="modal-card">
       <h3 id="goal-modal-team">Who scored?</h3>
@@ -342,6 +500,7 @@
       </div>
     </div>
   </div>
+
   <div class="modal-backdrop" id="confirm-modal-backdrop">
     <div class="modal-card">
       <h3 id="confirm-modal-title">Are you sure?</h3>
@@ -352,36 +511,99 @@
       </div>
     </div>
   </div>
+
+  <div class="modal-backdrop" id="history-modal-backdrop">
+    <div class="modal-card history-card">
+      <div class="history-header">
+        <h3>Game History</h3>
+        <button id="history-close" aria-label="Close history">&times;</button>
+      </div>
+      <select id="history-filter"></select>
+      <ul id="history-list"></ul>
+    </div>
+  </div>
+
 <script>
+  const HISTORY_KEY = 'lfa_scoreboard_history_v1';
+
   const state = {
     phase: 'pre',
     homeScore: 0,
     awayScore: 0,
     clockSeconds: 0,
     running: false,
-    events: []
+    events: [],
+    archived: false
   };
+
   let timer = null;
   let pendingGoalTeam = null;
   let confirmCallback = null;
+
   function formatClock(totalSeconds) {
     const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
     const s = (totalSeconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   }
+
   function currentMatchMinute() {
     return Math.floor(state.clockSeconds / 60) + "'";
   }
+
   function teamName(team) {
     const el = document.getElementById(team + '-name');
     return el.textContent.trim() || (team === 'home' ? 'Home' : 'Away');
   }
+
+  function currentKidName() {
+    return document.getElementById('kid-name').textContent.trim();
+  }
+
   function periodLabel() {
     if (state.phase === 'pre') return 'Pre-Game';
     if (state.phase === 'first') return '1st Half';
     if (state.phase === 'second') return '2nd Half';
     return 'Final';
   }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistory(history) {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      document.getElementById('storage-warning').classList.remove('show');
+      return true;
+    } catch (e) {
+      document.getElementById('storage-warning').classList.add('show');
+      return false;
+    }
+  }
+
+  function archiveCurrentGame() {
+    if (state.phase === 'pre' || state.archived) return;
+    const entry = {
+      id: Date.now() + Math.random(),
+      date: new Date().toISOString(),
+      homeTeam: teamName('home'),
+      awayTeam: teamName('away'),
+      homeScore: state.homeScore,
+      awayScore: state.awayScore,
+      kidName: currentKidName(),
+      events: state.events.map(e => ({ time: e.time, team: e.team, scorer: e.scorer }))
+    };
+    const history = loadHistory();
+    history.push(entry);
+    saveHistory(history);
+    state.archived = true;
+  }
+
   function renderEvents() {
     const list = document.getElementById('events-list');
     list.innerHTML = '';
@@ -403,15 +625,18 @@
       list.appendChild(li);
     });
   }
+
   function render() {
     document.getElementById('home-score').textContent = state.homeScore;
     document.getElementById('away-score').textContent = state.awayScore;
     document.getElementById('clock').textContent = formatClock(state.clockSeconds);
     document.getElementById('period-label').textContent = periodLabel();
+
     const startStopBtn = document.getElementById('start-stop');
     startStopBtn.textContent = state.running ? 'Stop' : 'Start';
     startStopBtn.classList.toggle('running', state.running);
     startStopBtn.disabled = (state.phase === 'final');
+
     const liveBadge = document.getElementById('live-badge');
     liveBadge.classList.remove('is-live');
     let liveText = 'Ready';
@@ -422,16 +647,21 @@
       liveBadge.classList.add('is-live');
     }
     document.getElementById('live-text').textContent = liveText;
+
     document.getElementById('half-btn').style.display = (state.phase === 'first') ? '' : 'none';
     document.getElementById('end-game-btn').style.display = (state.phase === 'first' || state.phase === 'second') ? '' : 'none';
+
     const goalsLocked = (state.phase === 'pre' || state.phase === 'final');
     document.querySelectorAll('.btn-goal[data-team]').forEach(btn => { btn.disabled = goalsLocked; });
+
     const homeHasGoal = state.events.some(e => e.team === 'home');
     const awayHasGoal = state.events.some(e => e.team === 'away');
     document.querySelector('.btn-correct[data-team="home"]').disabled = goalsLocked || !homeHasGoal;
     document.querySelector('.btn-correct[data-team="away"]').disabled = goalsLocked || !awayHasGoal;
+
     renderEvents();
   }
+
   function undoLastGoal(team) {
     let idx = -1;
     for (let i = state.events.length - 1; i >= 0; i--) {
@@ -443,35 +673,36 @@
     else { state.awayScore = Math.max(0, state.awayScore - 1); }
     render();
   }
+
   function tick() {
     state.clockSeconds++;
     render();
   }
+
   document.getElementById('start-stop').addEventListener('click', () => {
     if (state.phase === 'pre') { state.phase = 'first'; }
     state.running = !state.running;
-    if (state.running) {
-      timer = setInterval(tick, 1000);
-    } else {
-      clearInterval(timer);
-    }
+    if (state.running) { timer = setInterval(tick, 1000); }
+    else { clearInterval(timer); }
     render();
   });
+
   document.querySelectorAll('.btn-correct[data-team]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      undoLastGoal(btn.dataset.team);
-    });
+    btn.addEventListener('click', () => { undoLastGoal(btn.dataset.team); });
   });
+
   function showConfirm(title, body, onConfirm) {
     document.getElementById('confirm-modal-title').textContent = title;
     document.getElementById('confirm-modal-body').textContent = body;
     confirmCallback = onConfirm;
     document.getElementById('confirm-modal-backdrop').classList.add('open');
   }
+
   function hideConfirm() {
     document.getElementById('confirm-modal-backdrop').classList.remove('open');
     confirmCallback = null;
   }
+
   document.getElementById('confirm-modal-cancel').addEventListener('click', hideConfirm);
   document.getElementById('confirm-modal-confirm').addEventListener('click', () => {
     if (confirmCallback) confirmCallback();
@@ -480,6 +711,7 @@
   document.getElementById('confirm-modal-backdrop').addEventListener('click', (e) => {
     if (e.target.id === 'confirm-modal-backdrop') hideConfirm();
   });
+
   document.getElementById('half-btn').addEventListener('click', () => {
     showConfirm(
       'Start 2nd half?',
@@ -493,34 +725,40 @@
       }
     );
   });
+
   document.getElementById('end-game-btn').addEventListener('click', () => {
     showConfirm(
       'End the game?',
-      'This locks the score and clock. You will not be able to add more goals.',
+      'This locks the score and clock, and saves the game to history. You will not be able to add more goals.',
       () => {
         clearInterval(timer);
         state.running = false;
         state.phase = 'final';
+        archiveCurrentGame();
         render();
       }
     );
   });
+
   document.getElementById('new-game-btn').addEventListener('click', () => {
     showConfirm(
       'Start a new game?',
-      'This clears the score, clock, and goal log.',
+      'This clears the score, clock, and goal log. If a game is in progress, it will be saved to history first.',
       () => {
+        archiveCurrentGame();
         state.phase = 'pre';
         state.homeScore = 0;
         state.awayScore = 0;
         state.clockSeconds = 0;
         state.events = [];
         state.running = false;
+        state.archived = false;
         clearInterval(timer);
         render();
       }
     );
   });
+
   function openGoalModal(team) {
     pendingGoalTeam = team;
     document.getElementById('goal-modal-team').textContent = `Who scored for ${teamName(team)}?`;
@@ -529,10 +767,12 @@
     document.getElementById('goal-modal-backdrop').classList.add('open');
     input.focus();
   }
+
   function closeGoalModal() {
     document.getElementById('goal-modal-backdrop').classList.remove('open');
     pendingGoalTeam = null;
   }
+
   function logGoal(scorerName) {
     state.events.push({
       time: currentMatchMinute(),
@@ -541,6 +781,7 @@
     });
     render();
   }
+
   document.querySelectorAll('.btn-goal[data-team]').forEach(btn => {
     btn.addEventListener('click', () => {
       const team = btn.dataset.team;
@@ -549,25 +790,177 @@
       openGoalModal(team);
     });
   });
+
   document.getElementById('goal-modal-skip').addEventListener('click', () => {
     logGoal('');
     closeGoalModal();
   });
+
   document.getElementById('goal-modal-save').addEventListener('click', () => {
     logGoal(document.getElementById('goal-modal-input').value);
     closeGoalModal();
   });
+
   document.getElementById('goal-modal-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      document.getElementById('goal-modal-save').click();
-    }
+    if (e.key === 'Enter') { document.getElementById('goal-modal-save').click(); }
   });
+
   document.getElementById('goal-modal-backdrop').addEventListener('click', (e) => {
     if (e.target.id === 'goal-modal-backdrop') {
       logGoal('');
       closeGoalModal();
     }
   });
+
+  function renderHistoryFilterOptions() {
+    const select = document.getElementById('history-filter');
+    const currentValue = select.value || '__all__';
+    const history = loadHistory();
+    const uniqueKids = [...new Set(history.map(g => g.kidName).filter(Boolean))];
+    select.innerHTML = '';
+    const allOpt = document.createElement('option');
+    allOpt.value = '__all__';
+    allOpt.textContent = 'All games';
+    select.appendChild(allOpt);
+    uniqueKids.forEach(kid => {
+      const opt = document.createElement('option');
+      opt.value = kid;
+      opt.textContent = kid;
+      select.appendChild(opt);
+    });
+    select.value = uniqueKids.includes(currentValue) || currentValue === '__all__' ? currentValue : '__all__';
+  }
+
+  function renderHistoryList() {
+    const filterValue = document.getElementById('history-filter').value || '__all__';
+    const history = loadHistory();
+    const filtered = filterValue === '__all__' ? history : history.filter(g => g.kidName === filterValue);
+    const list = document.getElementById('history-list');
+    list.innerHTML = '';
+
+    if (filtered.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'history-empty';
+      li.textContent = 'No games logged yet.';
+      list.appendChild(li);
+      return;
+    }
+
+    [...filtered].reverse().forEach(game => {
+      const li = document.createElement('li');
+      li.className = 'history-entry';
+
+      const top = document.createElement('div');
+      top.className = 'history-entry-top';
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'history-date';
+      dateSpan.textContent = new Date(game.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      const delBtn = document.createElement('button');
+      delBtn.className = 'history-delete';
+      delBtn.setAttribute('aria-label', 'Delete this game');
+      delBtn.textContent = '\u00d7';
+      delBtn.addEventListener('click', () => {
+        showConfirm('Delete this game?', 'This removes it from your history for good.', () => {
+          const updated = loadHistory().filter(g => g.id !== game.id);
+          saveHistory(updated);
+          renderHistoryFilterOptions();
+          renderHistoryList();
+        });
+      });
+      top.appendChild(dateSpan);
+      top.appendChild(delBtn);
+
+      const teamsDiv = document.createElement('div');
+      teamsDiv.className = 'history-teams';
+      teamsDiv.textContent = `${game.homeTeam} ${game.homeScore} - ${game.awayScore} ${game.awayTeam}`;
+
+      const kidRow = document.createElement('div');
+      kidRow.className = 'history-kid-row';
+      const kidLabel = document.createElement('span');
+      kidLabel.textContent = 'Tracking for:';
+      const kidSpan = document.createElement('span');
+      kidSpan.className = 'history-kid';
+      kidSpan.contentEditable = 'true';
+      kidSpan.spellcheck = false;
+      kidSpan.setAttribute('data-placeholder', 'tap to add');
+      kidSpan.textContent = game.kidName || '';
+      kidSpan.addEventListener('blur', () => {
+        const newKid = kidSpan.textContent.trim();
+        const updated = loadHistory();
+        const idx = updated.findIndex(g => g.id === game.id);
+        if (idx !== -1) {
+          updated[idx].kidName = newKid;
+          saveHistory(updated);
+          renderHistoryFilterOptions();
+          renderKidGoalsLine();
+        }
+      });
+      kidRow.appendChild(kidLabel);
+      kidRow.appendChild(kidSpan);
+
+      const kidGoalsLine = document.createElement('div');
+      kidGoalsLine.className = 'history-kid-goals';
+      function renderKidGoalsLine() {
+        const kid = kidSpan.textContent.trim();
+        if (!kid) { kidGoalsLine.textContent = ''; return; }
+        const count = game.events.filter(e => (e.scorer || '').trim().toLowerCase() === kid.toLowerCase()).length;
+        kidGoalsLine.textContent = `${kid} scored ${count} ${count === 1 ? 'goal' : 'goals'}`;
+      }
+      renderKidGoalsLine();
+
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = `Goal list (${game.events.length})`;
+      details.appendChild(summary);
+      const goalList = document.createElement('ul');
+      goalList.className = 'history-goal-list';
+      if (game.events.length === 0) {
+        const emptyLi = document.createElement('li');
+        emptyLi.textContent = 'No goals logged.';
+        goalList.appendChild(emptyLi);
+      } else {
+        game.events.forEach(ev => {
+          const evLi = document.createElement('li');
+          const evTime = document.createElement('span');
+          evTime.className = 'event-time';
+          evTime.textContent = ev.time;
+          const evText = document.createElement('span');
+          const teamLabel = ev.team === 'home' ? game.homeTeam : game.awayTeam;
+          evText.textContent = `Goal, ${teamLabel}` + (ev.scorer ? `: ${ev.scorer}` : '');
+          evLi.appendChild(evTime);
+          evLi.appendChild(evText);
+          goalList.appendChild(evLi);
+        });
+      }
+      details.appendChild(goalList);
+
+      li.appendChild(top);
+      li.appendChild(teamsDiv);
+      li.appendChild(kidRow);
+      li.appendChild(kidGoalsLine);
+      li.appendChild(details);
+      list.appendChild(li);
+    });
+  }
+
+  document.getElementById('history-btn').addEventListener('click', () => {
+    renderHistoryFilterOptions();
+    renderHistoryList();
+    document.getElementById('history-modal-backdrop').classList.add('open');
+  });
+
+  document.getElementById('history-close').addEventListener('click', () => {
+    document.getElementById('history-modal-backdrop').classList.remove('open');
+  });
+
+  document.getElementById('history-modal-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'history-modal-backdrop') {
+      document.getElementById('history-modal-backdrop').classList.remove('open');
+    }
+  });
+
+  document.getElementById('history-filter').addEventListener('change', renderHistoryList);
+
   render();
 </script>
 </body>
